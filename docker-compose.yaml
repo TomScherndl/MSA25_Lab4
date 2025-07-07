@@ -1,0 +1,40 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
+  minio_init:
+    image: minio/mc:latest
+    container_name: minio_init
+    depends_on:
+      - minio
+    volumes:
+      - ./init_minio:/init_minio
+    entrypoint: ["/init_minio/init_minio.sh"]
+
+  streamlit:
+    build:
+      context: ./streamlit_app
+    ports:
+      - "8080:8080"
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: password
+      BUCKET_NAME_WEATHER: weather-data
+      BUCKET_NAME_RETAIL: retail-data
+      # GOLD_FILE_NAME: gold/weather_aggregated.parquet
+    depends_on:
+      - minio
+
+volumes:
+  minio_data:
