@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 while ! mc alias set local http://minio:9000 admin password > /dev/null 2>&1; do
   sleep 2

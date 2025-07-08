@@ -18,9 +18,8 @@ services:
     depends_on:
       - minio
     volumes:
-      - ./init_minio:/init_minio
+      - ${PWD}/init_minio:/init_minio
     entrypoint: ["/init_minio/init_minio.sh"]
-      
 
   streamlit:
     build:
