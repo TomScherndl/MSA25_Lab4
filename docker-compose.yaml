@@ -20,6 +20,7 @@ services:
     volumes:
       - ./init_minio:/init_minio
     entrypoint: ["/init_minio/init_minio.sh"]
+      
 
   streamlit:
     build:
